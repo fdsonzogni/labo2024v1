@@ -5,10 +5,10 @@ require("data.table")
 require("rpart")
 
 PARAM <- list()
-PARAM$semilla <- 123401
+PARAM$semilla <- 966439
 
 #------------------------------------------------------------------------------
-# particionar agrega una columna llamada fold a un dataset
+#  particionar agrega una columna llamada fold a un dataset
 #  que consiste en una particion estratificada segun agrupa
 
 # particionar( data=dataset, division=c(70,30),
@@ -97,3 +97,6 @@ cat("Estimulos: ", estimulos, "\n")
 cat("Aciertos (BAJA+2): ", aciertos, "\n")
 
 cat("Ganancia en testing (normalizada): ", ganancia_test_normalizada, "\n")
+
+
+
