@@ -8,4 +8,4 @@ linters: linters_with_defaults(
     trailing_blank_lines_linter = NULL,
     commented_code_linter = NULL
   )
-  
+    
