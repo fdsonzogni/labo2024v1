@@ -106,39 +106,48 @@ dir.create("./exp/HT2020/", showWarnings = FALSE)
 archivo_salida <- "./exp/HT2020/gridsearch.txt"
 
 # genero la data.table donde van los resultados del Grid Search
-tb_grid_search <- data.table( max_depth = integer(),
-                              min_split = integer(),
-                              ganancia_promedio = numeric() )
+#tb_grid_search <- data.table( max_depth = integer(),
+                              #min_split = integer(),
+                              #ganancia_promedio = numeric() )
+
+# Inicializa la tabla de resultados fuera de los bucles si no existe previamente
+if (!exists("tb_grid_search")) {
+  tb_grid_search <- data.table(vcp = numeric(), vmax_depth = integer(), vmin_split = integer(), vmin_bucket = integer(), ganancia_promedio = numeric())
+}
 
 
 # itero por los loops anidados para cada hiperparametro
 
-for (vmax_depth in c(4, 6, 8, 10, 12, 14)) {
-  for (vmin_split in c(1000, 800, 600, 400, 200, 100, 50, 20, 10)) {
-    # notar como se agrega
-
-    # vminsplit  minima cantidad de registros en un nodo para hacer el split
-    param_basicos <- list(
-      "cp" = -0.5, # complejidad minima
-      "minsplit" = vmin_split,
-      "minbucket" = 5, # minima cantidad de registros en una hoja
-      "maxdepth" = vmax_depth
-    ) # profundidad máxima del arbol
-
-    # Un solo llamado, con la semilla 17
-    ganancia_promedio <- ArbolesMontecarlo(PARAM$semillas, param_basicos)
-
-    # agrego a la tabla
-    tb_grid_search <- rbindlist( 
-      list( tb_grid_search, 
-            list( vmax_depth, vmin_split, ganancia_promedio) ) )
-
+for (vcp in c(-0.5, -0.4, -0.3, -0.1)) { # Bucle más externo ahora para vcp
+  for (vmax_depth in c(6, 8, 10, 12, 14, 16, 18)) {
+    for (vmin_split in c(1000, 800, 600, 400, 200)) {
+      for (vmin_bucket in c(250, 200, 150, 100, 50)) { # Itera sobre los valores para minbucket
+        
+        # Establece los parámetros básicos incluyendo los nuevos parámetros
+        param_basicos <- list(
+          "cp" = vcp,
+          "minsplit" = vmin_split,
+          "minbucket" = vmin_bucket,
+          "maxdepth" = vmax_depth
+        )
+        
+        # Llamada a tu función de simulación o entrenamiento con la semilla 17
+        ganancia_promedio <- ArbolesMontecarlo(PARAM$semillas, param_basicos)
+        
+        # Agrega los resultados a la tabla de búsqueda en cuadrícula
+        tb_grid_search <- rbindlist( 
+          list( tb_grid_search, 
+                data.table(vcp, vmax_depth, vmin_split, vmin_bucket, ganancia_promedio) ) 
+        )
+        
+      }
+    }
   }
-
-  # escribo la tabla a disco en cada vuelta del loop mas externo
-  Sys.sleep(2)  # espero un par de segundos
-
-  fwrite( tb_grid_search,
-          file = archivo_salida,
-          sep = "\t" )
+  
+  # Escribe la tabla a disco después de cada iteración del bucle de vcp
+  Sys.sleep(2)  # Pequeña pausa
+  
+  fwrite(tb_grid_search,
+         file = archivo_salida,
+         sep = "\t" )
 }
