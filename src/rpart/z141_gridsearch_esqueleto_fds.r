@@ -118,10 +118,10 @@ if (!exists("tb_grid_search")) {
 
 # itero por los loops anidados para cada hiperparametro
 
-for (vcp in c(-0.5, -0.4, -0.3, -0.1)) { # Bucle más externo ahora para vcp
-  for (vmax_depth in c(6, 8, 10, 12, 14, 16, 18)) {
-    for (vmin_split in c(1000, 800, 600, 400, 200)) {
-      for (vmin_bucket in c(250, 200, 150, 100, 50)) { # Itera sobre los valores para minbucket
+for (vcp in c(-0.9, -0.7, -0.5, -0.3)) { # Bucle más externo ahora para vcp
+  for (vmax_depth in c(6, 8, 10, 12, 14, 16)) {
+    for (vmin_split in c(950, 750, 550, 350, 150)) {
+      for (vmin_bucket in c(350, 250, 175, 75, 50)) { # Itera sobre los valores para minbucket
         
         # Establece los parámetros básicos incluyendo los nuevos parámetros
         param_basicos <- list(
