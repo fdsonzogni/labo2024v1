@@ -10,7 +10,7 @@ require("rpart.plot")
 setwd("~/buckets/b1/") # Establezco el Working Directory
 
 # cargo el dataset
-dataset <- fread("./datasets/dataset_pequeno.csv")
+dataset <- fread("./datasets/dataset_pequeno_bin.csv")
 
 dtrain <- dataset[foto_mes == 202107] # defino donde voy a entrenar
 dapply <- dataset[foto_mes == 202109] # defino donde voy a aplicar el modelo
@@ -18,13 +18,13 @@ dapply <- dataset[foto_mes == 202109] # defino donde voy a aplicar el modelo
 # genero el modelo,  aqui se construye el arbol
 # quiero predecir clase_ternaria a partir de el resto de las variables
 modelo <- rpart(
-        formula = "clase_ternaria ~ .",
+        formula = "clase_binaria ~ .",
         data = dtrain, # los datos donde voy a entrenar
         xval = 0,
-        cp = -0.5, # esto significa no limitar la complejidad de los splits
-        minsplit = 1340, # minima cantidad de registros para que se haga el split
+        cp = -0.7, # esto significa no limitar la complejidad de los splits
+        minsplit = 1250, # minima cantidad de registros para que se haga el split
         minbucket = 600, # tamaño minimo de una hoja
-        maxdepth = 6
+        maxdepth = 12
 ) # profundidad maxima del arbol
 
 
@@ -47,7 +47,7 @@ prediccion <- predict(
 # cada columna es el vector de probabilidades
 
 # agrego a dapply una columna nueva que es la probabilidad de BAJA+2
-dapply[, prob_baja2 := prediccion[, "BAJA+2"]]
+dapply[, prob_baja2 := prediccion[, "SUMA"]]
 
 # solo le envio estimulo a los registros
 #  con probabilidad de BAJA+2 mayor  a  1/40
