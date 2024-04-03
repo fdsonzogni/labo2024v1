@@ -34,11 +34,11 @@ particionar <- function(data, division, agrupa = "", campo = "fold", start = 1, 
 
 ArbolEstimarGanancia <- function(semilla, param_basicos) {
   # particiono estratificadamente el dataset
-  particionar(dataset, division = c(7, 3), agrupa = "clase_ternaria", seed = semilla)
+  particionar(dataset, division = c(7, 3), agrupa = "clase_binaria", seed = semilla)
 
   # genero el modelo
   # quiero predecir clase_ternaria a partir del resto
-  modelo <- rpart("clase_ternaria ~ .",
+  modelo <- rpart("clase_binaria ~ .",
     data = dataset[fold == 1], # fold==1  es training,  el 70% de los datos
     xval = 0,
     control = param_basicos
@@ -58,8 +58,8 @@ ArbolEstimarGanancia <- function(semilla, param_basicos) {
   # calculo la ganancia en testing  qu es fold==2
   ganancia_test <- dataset[
     fold == 2,
-    sum(ifelse(prediccion[, "BAJA+2"] > 0.025,
-      ifelse(clase_ternaria == "BAJA+2", 117000, -3000),
+    sum(ifelse(prediccion[, "SUMA"] > 0.025,
+      ifelse(clase_binaria == "SUMA", 117000, -3000),
       0
     ))
   ]
@@ -93,10 +93,10 @@ setwd("~/buckets/b1/") # Establezco el Working Directory
 # cargo los datos
 
 # cargo los datos
-dataset <- fread("./datasets/dataset_pequeno.csv")
+dataset <- fread("./datasets/dataset_pequeno_bin.csv")
 
 # trabajo solo con los datos con clase, es decir 202107
-dataset <- dataset[clase_ternaria != ""]
+dataset <- dataset[clase_binaria != ""]
 
 # genero el archivo para Kaggle
 # creo la carpeta donde va el experimento
@@ -118,10 +118,10 @@ if (!exists("tb_grid_search")) {
 
 # itero por los loops anidados para cada hiperparametro
 
-for (vcp in c(-0.9, -0.7, -0.5, -0.3)) { # Bucle más externo ahora para vcp
-  for (vmax_depth in c(6, 8, 10, 12, 14, 16)) {
-    for (vmin_split in c(950, 750, 550, 350, 150)) {
-      for (vmin_bucket in c(350, 250, 175, 75, 50)) { # Itera sobre los valores para minbucket
+for (vcp in c(-0.9, -0.7, -0.5, -0.3, -0.1)) { # Bucle más externo ahora para vcp
+  for (vmax_depth in c(6, 8, 10, 12, 14)) {
+    for (vmin_split in c(1250, 1000, 850, 600, 300, 150)) {
+      for (vmin_bucket in c(600, 450, 400, 250, 100, 50)) { # Itera sobre los valores para minbucket
         
         # Establece los parámetros básicos incluyendo los nuevos parámetros
         param_basicos <- list(
