@@ -103,7 +103,7 @@ dataset <- dataset[clase_ternaria != ""]
 # HT  representa  Hiperparameter Tuning
 dir.create("./exp/", showWarnings = FALSE)
 dir.create("./exp/HT2020/", showWarnings = FALSE)
-archivo_salida <- "./exp/HT2020/gridsearch.txt"
+archivo_salida <- "./exp/HT2020/gridsearch_eli.txt"
 
 # genero la data.table donde van los resultados del Grid Search
 #tb_grid_search <- data.table( max_depth = integer(),
@@ -118,10 +118,10 @@ if (!exists("tb_grid_search")) {
 
 # itero por los loops anidados para cada hiperparametro
 
-for (vcp in c(-0.9, -0.7, -0.5, -0.3)) { # Bucle más externo ahora para vcp
-  for (vmax_depth in c(6, 8, 10, 12, 14, 16)) {
-    for (vmin_split in c(950, 750, 550, 350, 150)) {
-      for (vmin_bucket in c(350, 250, 175, 75, 50)) { # Itera sobre los valores para minbucket
+for (vcp in c(-0.5)) { # Bucle más externo ahora para vcp
+  for (vmax_depth in c(6)) {
+    for (vmin_split in c(600)) {
+      for (vmin_bucket in c(150)) { # Itera sobre los valores para minbucket
         
         # Establece los parámetros básicos incluyendo los nuevos parámetros
         param_basicos <- list(
