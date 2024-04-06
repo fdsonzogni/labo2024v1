@@ -30,8 +30,13 @@ modelo <- rpart(
 
 # grafico el arbol
 prp(modelo,
-        extra = 101, digits = -5,
-        branch = 1, type = 4, varlen = 0, faclen = 0
+    extra = 106,  # Muestra solo los porcentajes de clasificación correcta por nodo
+    cex = 0.6,    # Ajusta el tamaño del texto globalmente
+    box.palette = "RdBu",  # Usa una paleta de colores para diferenciar los nodos
+    branch = 0.8,  # Ajusta el grosor de las líneas de las ramas
+    type = 4,  # Mantiene el diseño del árbol
+    varlen = 10,  # Limita la longitud de las etiquetas de las variables a 10 caracteres
+    faclen = 10   # Limita la longitud de las etiquetas de los factores a 10 caracteres
 )
 
 
