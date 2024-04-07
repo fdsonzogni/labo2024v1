@@ -96,21 +96,36 @@ setorder(dataset, fold, -prob_baja2)
 # agrego una columna que es la de las ganancias
 # la multiplico por 2 para que ya este normalizada
 #  es 2 porque cada fold es el 50%
-dataset[, gan := 2 *ifelse(clase_ternaria == "BAJA+2", 117000, -3000)]
+dataset[, gan := 2 * ifelse(clase_ternaria == "BAJA+2", 117000, -3000)]
 dataset[, ganancia_acumulada := cumsum(gan), by = fold]
-dataset[, pos := sequence(.N), by = fold]
-
-
+dataset[, pos := sequence(.N), by = fold] 
 # Esta hermosa curva muestra como en el mentiroso training
 #   la ganancia es siempre mejor que en el real testing
 # segundo grafico solo los primeros 20k enviso
+# Calculamos los límites y breaks para el eje Y
+
+# Asumimos que los datos están en una escala de millones para empezar
+
+breaks_y <- seq(from = 0, to = 75000000, by = 5000000)
+
+# Define los títulos de los ejes
+titulo_x <- "Posición"
+titulo_y <- "Ganancia Acumulada (en Millones)"
+
 gra <- ggplot(
            data = dataset[pos <= 20000],
            aes( x = pos, y = ganancia_acumulada,
-                color = ifelse(fold == 1, "train", "test") )
-             ) + geom_line()
+                color = ifelse(fold == 1, "set de entrenamiento", "set de testeo") )
+             ) + geom_line() + 
+             scale_y_continuous(breaks = breaks_y, labels = scales::unit_format(unit = "M", scale = 1e-6, accuracy = 1e-3)) +
+  theme(legend.position = "bottom") +
+  xlab(titulo_x) +  # Agrega el título al eje X
+  ylab(titulo_y)    # Agrega el título al eje Y
 
-plot( gra )
+print( gra )
+
+dir.create("./plots/", showWarnings = FALSE)
+ggsave("./plots/gra.png", gra, width = 10, height=10, dpi=300, units = "in")
 
 cat( "Train gan max: ", dataset[fold==1, max(ganancia_acumulada)], "\n" )
 cat( "Test  gan max: ", dataset[fold==2, max(ganancia_acumulada)], "\n" )
