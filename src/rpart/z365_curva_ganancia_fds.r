@@ -12,6 +12,7 @@ gc() # Garbage Collection
 # cargo las librerias que necesito
 require("data.table")
 require("rpart")
+require("rpart.plot")
 require("ggplot2")
 
 
@@ -19,7 +20,7 @@ require("ggplot2")
 PARAM <- list()
 PARAM$minsplit <- 250
 PARAM$minbucket <- 25
-PARAM$maxdepth <- 16
+PARAM$maxdepth <- 4
 
 #------------------------------------------------------------------------------
 # particionar agrega una columna llamada fold a un dataset
@@ -81,6 +82,17 @@ modelo <- rpart(
        minbucket = PARAM$minbucket,
        maxdepth = PARAM$maxdepth
 )
+
+png("./plots/arbol_decision.png", width = 1024, height = 768, res = 300)
+
+# grafico el arbol
+prp(modelo,
+        extra = 101, digits = -5,
+        branch = 1, type = 4, varlen = 0, faclen = 0
+)
+
+# Cierra el dispositivo gráfico, lo que guarda el archivo
+dev.off()
 
 
 # aplico el modelo a TODOS los datos, inclusive los de training
