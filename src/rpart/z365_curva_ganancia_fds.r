@@ -83,7 +83,7 @@ modelo <- rpart(
        maxdepth = PARAM$maxdepth
 )
 
-png("./plots/arbol_decision.png", width = 1024, height = 768, res = 300)
+png("./plots/arbol_decision.png", width = 2000, height = 1500, res = 300)
 
 # grafico el arbol
 prp(modelo,
