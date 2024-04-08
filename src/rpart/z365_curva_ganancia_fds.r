@@ -17,9 +17,9 @@ require("ggplot2")
 
 # cambiar aqui los parametros
 PARAM <- list()
-PARAM$minsplit <- 300
-PARAM$minbucket <- 20
-PARAM$maxdepth <- 11
+PARAM$minsplit <- 250
+PARAM$minbucket <- 25
+PARAM$maxdepth <- 16
 
 #------------------------------------------------------------------------------
 # particionar agrega una columna llamada fold a un dataset
@@ -111,21 +111,27 @@ breaks_y <- seq(from = 0, to = 75000000, by = 5000000)
 # Define los títulos de los ejes
 titulo_x <- "Posición"
 titulo_y <- "Ganancia Acumulada (en Millones)"
+# Crear una nueva columna con 'Train' o 'Test'
+dataset$ColorGroup <- ifelse(dataset$fold == 1, "Train", "Test")
 
 gra <- ggplot(
            data = dataset[pos <= 20000],
            aes( x = pos, y = ganancia_acumulada,
-                color = ifelse(fold == 1, "set de entrenamiento", "set de testeo") )
-             ) + geom_line() + 
+                color = ColorGroup)) +
+                geom_line() + 
              scale_y_continuous(breaks = breaks_y, labels = scales::unit_format(unit = "M", scale = 1e-6, accuracy = 1e-3)) +
   theme(legend.position = "bottom") +
   xlab(titulo_x) +  # Agrega el título al eje X
-  ylab(titulo_y)    # Agrega el título al eje Y
+  ylab(titulo_y) +   # Agrega el título al eje Y
+  # Título eje Y
+  annotate("text", label = "EXPERIMENTO\nGrid Search con mejores hiperparámetros:\nMD: 16 - MS: 250 - MB: 25\nGananacia Entrenamiento: 79.704 M\nGanancia Testeo: 45.252 M", x = 7500, y = 25000000, size = 4, color = "blue") +
+  scale_color_manual(values = c("Train" = "blue", "Test" = "red"),
+                     labels = c("Set de entrenamiento", "Set de Testeo"))  # Define manualmente los colores y etiquetas
 
 print( gra )
 
 dir.create("./plots/", showWarnings = FALSE)
-ggsave("./plots/gra.png", gra, width = 10, height=10, dpi=300, units = "in")
+ggsave("./plots/Z365_graf_GS_MD16_MS250_MB25.png", gra, width = 10, height = 6, dpi = 300, units = "in")
 
-cat( "Train gan max: ", dataset[fold==1, max(ganancia_acumulada)], "\n" )
-cat( "Test  gan max: ", dataset[fold==2, max(ganancia_acumulada)], "\n" )
+cat( "Train gan max: ", dataset[fold == 1, max(ganancia_acumulada)], "\n" )
+cat( "Test  gan max: ", dataset[fold == 2, max(ganancia_acumulada)], "\n" )
