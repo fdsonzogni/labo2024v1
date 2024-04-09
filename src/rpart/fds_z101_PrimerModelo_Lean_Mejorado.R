@@ -9,8 +9,8 @@ require("rpart.plot")
 # Parametriza el directorio de trabajo, el directorio de exportación, prefijo de archivo y el contador inicial
 #setwd("~/buckets/b1/")
 working_directory <- "~/buckets/b1/"
-export_directory <- "./exp/HT3210"
-prefijo_archivo <- "K3210_"
+export_directory <- "./exp/HT3330"
+prefijo_archivo <- "K3330_"
 inicio_contador <- 1  # Asegúrate de que este sea el número inicial correcto
 
 # Establezco el Working Directory
@@ -25,11 +25,8 @@ dapply <- dataset[foto_mes == 202109]
 
 # Define las corridas específicas basadas en resultados anteriores
 resultados_corridas <- list(
-  list(posicion = 1, cp = -0.539782323, maxdepth = 20, minsplit = 3651, minbucket = 190, ganancia_promedio = 999),
-  list(posicion = 2, cp = -0.086807976, maxdepth = 20, minsplit = 1256, minbucket = 627, ganancia_promedio = 999),
-  list(posicion = 5, cp = -0.822862028, maxdepth = 7, minsplit = 4088, minbucket = 423, ganancia_promedio = 999),
-  list(posicion = 10, cp = -0.80364278, maxdepth = 10, minsplit = 5779, minbucket = 1417, ganancia_promedio = 999),
-  list(posicion = 50, cp = -0.870856743, maxdepth = 15, minsplit = 4772, minbucket = 2373, ganancia_promedio = 999)
+  list(posicion = 10, cp = -0.62, maxdepth = 3, minsplit = 2932, minbucket = 1415, ganancia_promedio = 999),
+  list(posicion = 50, cp = -0.03, maxdepth = 4, minsplit = 7409, minbucket = 2352, ganancia_promedio = 999)
 )
 
 # Asegura que el directorio de exportación exista
