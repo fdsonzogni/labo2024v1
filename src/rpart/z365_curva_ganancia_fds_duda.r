@@ -12,7 +12,6 @@ gc() # Garbage Collection
 # cargo las librerias que necesito
 require("data.table")
 require("rpart")
-require("rpart.plot")
 require("ggplot2")
 
 
@@ -54,7 +53,7 @@ setwd("~/buckets/b1/") # Establezco el Working Directory
 
 #cargo MI amada primera semilla, que esta en MI bucket
 tabla_semillas <- fread( "./datasets//mis_semillas.txt" )
-ksemilla_azar <- tabla_semillas[ 5, semilla ]  # 1 es mi primera semilla
+ksemilla_azar <- tabla_semillas[ 1, semilla ]  # 1 es mi primera semilla
 
 # cargo el dataset
 dataset <- fread("./datasets/dataset_pequeno.csv")
@@ -83,17 +82,6 @@ modelo <- rpart(
        maxdepth = PARAM$maxdepth
 )
 
-png("./plots/arbol_decision_3-10000-5000.png", width = 2000, height = 1500, res = 300)
-
-# grafico el arbol
-prp(modelo,
-        extra = 101, digits = -5,
-        branch = 1, type = 4, varlen = 0, faclen = 0
-)
-
-# Cierra el dispositivo gráfico, lo que guarda el archivo
-dev.off()
-
 
 # aplico el modelo a TODOS los datos, inclusive los de training
 prediccion <- predict(modelo, dataset, type = "prob")
@@ -108,40 +96,25 @@ setorder(dataset, fold, -prob_baja2)
 # agrego una columna que es la de las ganancias
 # la multiplico por 2 para que ya este normalizada
 #  es 2 porque cada fold es el 50%
-dataset[, gan := 2 * ifelse(clase_ternaria == "BAJA+2", 117000, -3000)]
+dataset[, gan := 2 *ifelse(clase_ternaria == "BAJA+2", 117000, -3000)]
 dataset[, ganancia_acumulada := cumsum(gan), by = fold]
-dataset[, pos := sequence(.N), by = fold] 
+dataset[, pos := sequence(.N), by = fold]
+
+
 # Esta hermosa curva muestra como en el mentiroso training
 #   la ganancia es siempre mejor que en el real testing
 # segundo grafico solo los primeros 20k enviso
-# Calculamos los límites y breaks para el eje Y
-
-# Asumimos que los datos están en una escala de millones para empezar
-
-breaks_y <- seq(from = 0, to = 75000000, by = 5000000)
-
-# Define los títulos de los ejes
-titulo_x <- "Posición"
-titulo_y <- "Ganancia Acumulada (en Millones)"
-# Crear una nueva columna con 'Train' o 'Test'
-dataset$ColorGroup <- ifelse(dataset$fold == 1, "Train", "Test")
-
 gra <- ggplot(
            data = dataset[pos <= 20000],
            aes( x = pos, y = ganancia_acumulada,
-                color = ColorGroup)) +
-                geom_line() + 
-             scale_y_continuous(breaks = breaks_y, labels = scales::unit_format(unit = "M", scale = 1e-6, accuracy = 1e-3)) +
-  theme(legend.position = "bottom") +
-  xlab(titulo_x) +  # Agrega el título al eje X
-  ylab(titulo_y) +   # Agrega el título al eje Y
-  # Título eje Y
-  annotate("text", label = "EXPERIMENTO\nProfundidad 3:\nMD: 3 - MS: 10000 - MB: 5000\nGananacia Entrenamiento: 43.566 M\nGanancia Testeo: 41.682 M", x = 7500, y = 15000000, size = 4, color = "blue")
-  
+                color = ifelse(fold == 1, "train", "test") )
+             ) + geom_line()
+
 print( gra )
 
 dir.create("./plots/", showWarnings = FALSE)
-ggsave("./plots/Z365_graf_BAY_MD3_MS10000_MB5000.png", gra, width = 10, height = 6, dpi = 300, units = "in")
+ggsave("./plots/prueba.png", gra, width = 10, height = 6, dpi = 300, units = "in")
 
-cat( "Train gan max: ", dataset[fold == 1, max(ganancia_acumulada)], "\n" )
-cat( "Test  gan max: ", dataset[fold == 2, max(ganancia_acumulada)], "\n" )
+
+cat( "Train gan max: ", dataset[fold==1, max(ganancia_acumulada)], "\n" )
+cat( "Test  gan max: ", dataset[fold==2, max(ganancia_acumulada)], "\n" )
