@@ -18,9 +18,9 @@ require("ggplot2")
 
 # cambiar aqui los parametros
 PARAM <- list()
-PARAM$minsplit <- 10000
-PARAM$minbucket <- 5000
-PARAM$maxdepth <- 3
+PARAM$minsplit <- 25
+PARAM$minbucket <- 5
+PARAM$maxdepth <- 20
 
 #------------------------------------------------------------------------------
 # particionar agrega una columna llamada fold a un dataset
@@ -83,7 +83,7 @@ modelo <- rpart(
        maxdepth = PARAM$maxdepth
 )
 
-png("./plots/arbol_decision_3-10000-5000.png", width = 2000, height = 1500, res = 300)
+png("./plots/arbol_decision_20-25-5.png", width = 2000, height = 1500, res = 300)
 
 # grafico el arbol
 prp(modelo,
@@ -118,7 +118,7 @@ dataset[, pos := sequence(.N), by = fold]
 
 # Asumimos que los datos están en una escala de millones para empezar
 
-breaks_y <- seq(from = 0, to = 75000000, by = 5000000)
+breaks_y <- seq(from = -25000000, to = 125000000, by = 5000000)
 
 # Define los títulos de los ejes
 titulo_x <- "Posición"
@@ -136,12 +136,12 @@ gra <- ggplot(
   xlab(titulo_x) +  # Agrega el título al eje X
   ylab(titulo_y) +   # Agrega el título al eje Y
   # Título eje Y
-  annotate("text", label = "EXPERIMENTO\nProfundidad 3:\nMD: 3 - MS: 10000 - MB: 5000\nGananacia Entrenamiento: 43.566 M\nGanancia Testeo: 41.682 M", x = 7500, y = 15000000, size = 4, color = "blue")
+  annotate("text", label = "EXPERIMENTO\nProfundidad 20:\nMD: 20 - MS: 25 - MB: 5\nGananacia Entrenamiento: 114.078 M\nGanancia Testeo: 27.744 M", x = 7500, y = 20000000, size = 4, color = "blue")
   
 print( gra )
 
 dir.create("./plots/", showWarnings = FALSE)
-ggsave("./plots/Z365_graf_BAY_MD3_MS10000_MB5000.png", gra, width = 10, height = 6, dpi = 300, units = "in")
+ggsave("./plots/Z365_graf_BAY_MD20_MS25_MB5.png", gra, width = 10, height = 6, dpi = 300, units = "in")
 
 cat( "Train gan max: ", dataset[fold == 1, max(ganancia_acumulada)], "\n" )
 cat( "Test  gan max: ", dataset[fold == 2, max(ganancia_acumulada)], "\n" )
