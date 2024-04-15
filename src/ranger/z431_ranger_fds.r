@@ -12,10 +12,10 @@ require("randomForest") # solo se usa para imputar nulos
 # "mtry" = 30, cantidad de variables que evalua para hacer un split
 #  generalmente sqrt(ncol(dtrain))
 param <- list(
-  "num.trees" = 300, # cantidad de arboles
-  "mtry" = 13,
-  "min.node.size" = 50, # tamaño minimo de las hojas
-  "max.depth" = 10 # 0 significa profundidad infinita
+  "num.trees" = 440, # cantidad de arboles
+  "mtry" = 16,
+  "min.node.size" = 141, # tamaño minimo de las hojas
+  "max.depth" = 13 # 0 significa profundidad infinita
 )
 
 #------------------------------------------------------------------------------
@@ -81,7 +81,7 @@ entrega <- as.data.table(list(
 # HT  representa  Hiperparameter Tuning
 dir.create("./exp/", showWarnings = FALSE)
 dir.create("./exp/KA4310/", showWarnings = FALSE)
-archivo_salida <- "./exp/KA4310/KA4310_FDS_001.csv"
+archivo_salida <- "./exp/KA4310/KA4310_BEST_RANGER_BO_002.csv"
 
 # genero el archivo para Kaggle
 fwrite(entrega,
