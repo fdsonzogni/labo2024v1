@@ -31,6 +31,9 @@ ksemilla_azar <- tabla_semillas[ 1, semilla ]  # 1 es mi primer semilla
 # cargo los datos donde entreno
 dataset <- fread("./datasets/dataset_pequeno.csv")
 
+# asigno un valor muy negativo
+dataset[ is.na(Master_Finiciomora), Master_Finiciomora := -999 ]
+dataset[ is.na(Visa_Finiciomora), Visa_Finiciomora :=  -999 ]
 
 dtrain <- dataset[foto_mes == 202107]
 dapply <- dataset[foto_mes == 202109]
@@ -81,7 +84,7 @@ entrega <- as.data.table(list(
 # HT  representa  Hiperparameter Tuning
 dir.create("./exp/", showWarnings = FALSE)
 dir.create("./exp/KA4310/", showWarnings = FALSE)
-archivo_salida <- "./exp/KA4310/KA4310_BEST_RANGER_BO_002.csv"
+archivo_salida <- "./exp/KA4310/KA4310_BEST_RANGER_BO_003.csv"
 
 # genero el archivo para Kaggle
 fwrite(entrega,
