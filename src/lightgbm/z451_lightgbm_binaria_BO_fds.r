@@ -41,8 +41,7 @@ PARAM$input$training <- c(202107) # los meses en los que vamos a entrenar
 # un undersampling de 0.1  toma solo el 10% de los CONTINUA
 # undersampling de 1.0  implica tomar TODOS los datos
 PARAM$trainingstrategy$undersampling <- 1.0
-
-PARAM$hyperparametertuning$iteraciones <- 120
+PARAM$hyperparametertuning$iteraciones <- 150
 PARAM$hyperparametertuning$xval_folds <- 5
 PARAM$hyperparametertuning$POS_ganancia <- 117000
 PARAM$hyperparametertuning$NEG_ganancia <- -3000
@@ -53,9 +52,9 @@ PARAM$hyperparametertuning$NEG_ganancia <- -3000
 hs <- makeParamSet(
   makeNumericParam("learning_rate", lower = 0.01, upper = 0.5),
   makeNumericParam("feature_fraction", lower = 0.1, upper = 1.0),
-  makeNumericParam("max_depth", lower = 1, upper = 25),
+  #makeNumericParam("max_depth", lower = 1, upper = 25),
   makeIntegerParam("min_data_in_leaf", lower = 1L, upper = 8000L),
-  makeIntegerParam("subsample", lower = 0.1, upper = 0.5),
+  #makeIntegerParam("subsample", lower = 0.1, upper = 0.5),
   makeIntegerParam("num_leaves", lower = 16L, upper = 1024L),
   makeIntegerParam("envios", lower = 5000L, upper = 15000L)
 )
