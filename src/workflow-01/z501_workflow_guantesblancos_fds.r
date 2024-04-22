@@ -110,7 +110,7 @@ DR_drifting_guantesblancos <- function( pmyexp, pinputexps, pserver="local")
   param_local$variables_intrames <- TRUE
   # valores posibles
   #  "ninguno", "rank_simple", "rank_cero_fijo", "deflacion", "estandarizar"
-  param_local$metodo <- "deflacion"
+  param_local$metodo <- "estandarizar"
 
   return( exp_correr_script( param_local ) ) # linea fija
 }
