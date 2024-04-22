@@ -348,7 +348,7 @@ corrida_guantesblancos_202107 <- function( pnombrewf, pvirgen=FALSE )
   # Ya tengo corrido FE0001 y parto de alli
   TS_strategy_guantesblancos_202107( "TS0003", "FE0003" )
 
-  HT_tuning_guantesblancos( "HT0004", "S0004" )
+  HT_tuning_guantesblancos( "HT0004", "TS0004" )
 
   # El ZZ depente de HT y TS
   ZZ_final_guantesblancos( "ZZ0004", c("HT0004", "TS0004") )
