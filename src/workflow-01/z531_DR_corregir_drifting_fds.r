@@ -201,6 +201,9 @@ drift_deflacion <- function(campos_monetarios) {
     "IPC" = vIPC
   )
 
+ # Convertir todas las columnas monetarias a numeric antes de aplicar el ajuste por IPC
+  dataset[, (campos_monetarios) := lapply(.SD, as.numeric), .SDcols = campos_monetarios]
+
 # Operación de join y actualización
   dataset[tb_IPC, on = c(PARAM$dataset_metadata$periodo), 
           (campos_monetarios) := lapply(.SD, function(x) x * i.IPC), .SDcols = campos_monetarios]
