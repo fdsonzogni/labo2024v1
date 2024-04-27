@@ -203,7 +203,9 @@ drift_deflacion <- function(campos_monetarios) {
 
 # Asegurándonos de que 'dataset' es un data.table
 if (!is.data.table(dataset)) {
-  dataset <- as.data.table(dataset)
+      dataset <- as.data.table(dataset)}
+if (!is.data.table(tb_IPC)) {
+      dataset <- as.data.table(tb_IPC)}
 
 
  # Convertir todas las columnas monetarias a numeric antes de aplicar el ajuste por IPC
