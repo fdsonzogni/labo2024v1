@@ -110,7 +110,7 @@ DR_drifting_guantesblancos <- function( pmyexp, pinputexps, pserver="local")
   param_local$variables_intrames <- TRUE
   # valores posibles
   #  "ninguno", "rank_simple", "rank_cero_fijo", "deflacion", "estandarizar"
-  param_local$metodo <- "deflacion"
+  param_local$metodo <- "rank_cero_fijo"
 
   return( exp_correr_script( param_local ) ) # linea fija
 }
@@ -276,7 +276,7 @@ HT_tuning_guantesblancos <- function( pmyexp, pinputexps, pserver="local")
 
 
   # una Beyesian de Guantes Blancos, solo hace 15 iteraciones
-  param_local$bo_iteraciones <- 15 # iteraciones de la Optimizacion Bayesiana
+  param_local$bo_iteraciones <- 100 # iteraciones de la Optimizacion Bayesiana
 
   return( exp_correr_script( param_local ) ) # linea fija
 }
