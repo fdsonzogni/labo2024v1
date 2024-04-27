@@ -203,7 +203,7 @@ tb_IPC <- data.table("foto_mes" = vfoto_mes,
 
 # Operación de join y actualización
   dataset[tb_IPC,
-    on = .foto_mes,
+    on = c(PARAM$dataset_metadata$periodo),
     (campos_monetarios) := .SD * i.IPC,
     .SDcols = campos_monetarios
   ]
