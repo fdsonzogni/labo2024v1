@@ -203,7 +203,7 @@ tb_IPC <- data.table("foto_mes" = vfoto_mes,
 
 # Operación de join y actualización
   dataset[tb_IPC,
-    on = .("foto_mes"),
+    on = .foto_mes,
     (campos_monetarios) := .SD * i.IPC,
     .SDcols = campos_monetarios
   ]
