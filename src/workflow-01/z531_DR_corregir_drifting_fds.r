@@ -196,32 +196,17 @@ drift_deflacion <- function(campos_monetarios) {
     0.7763107219, 0.7566381305, 0.7289384687
   )
 
-  tb_IPC <- data.table(
-    paste0(PARAM$dataset_metadata$periodo) := vfoto_mes,
-    "IPC" = vIPC
-  )
+tb_IPC <- data.table("foto_mes" = vfoto_mes,
+  "IPC" = vIPC
+)
 
-# Asegurándonos de que 'dataset' es un data.table
-if (!is.data.table(dataset)) {
-      dataset <- as.data.table(dataset)}
-if (!is.data.table(tb_IPC)) {
-      dataset <- as.data.table(tb_IPC)}
-
-
- # Convertir todas las columnas monetarias a numeric antes de aplicar el ajuste por IPC
-  dataset[, (campos_monetarios) := lapply(.SD, as.numeric), .SDcols = campos_monetarios]
 
 # Operación de join y actualización
-  dataset[tb_IPC, on = c(PARAM$dataset_metadata$periodo), 
-          (campos_monetarios) := lapply(.SD, function(x) x * i.IPC), .SDcols = campos_monetarios]
-
-
-#Cambio por error y comento esta seccion de c[odigo orginal]
-#  dataset[tb_IPC,
-    #on = c(PARAM$dataset_metadata$periodo),
-    #(campos_monetarios) := .SD * i.IPC,
-    #.SDcols = campos_monetarios
-  #]
+  dataset[tb_IPC,
+    on = .("foto_mes"),
+    (campos_monetarios) := .SD * i.IPC,
+    .SDcols = campos_monetarios
+  ]
 }
 
 #------------------------------------------------------------------------------
