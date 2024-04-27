@@ -110,7 +110,7 @@ DR_drifting_guantesblancos <- function( pmyexp, pinputexps, pserver="local")
   param_local$variables_intrames <- TRUE
   # valores posibles
   #  "ninguno", "rank_simple", "rank_cero_fijo", "deflacion", "estandarizar"
-  param_local$metodo <- "estandarizar"
+  param_local$metodo <- "deflacion"
 
   return( exp_correr_script( param_local ) ) # linea fija
 }
@@ -181,16 +181,16 @@ TS_strategy_guantesblancos_202109 <- function( pmyexp, pinputexps, pserver="loca
 
 
   param_local$future <- c(202109)
-  param_local$final_train <- c(202107, 202106, 202105)
+  param_local$final_train <- c(202107, 202106, 202105, 202104, 202102)
 
 
-  param_local$train$training <- c(202105, 202104, 202103)
+  param_local$train$training <- c(202105, 202104, 202103, 202102, 202101)
   param_local$train$validation <- c(202106)
   param_local$train$testing <- c(202107)
 
   # Atencion  0.1  de  undersampling de la clase mayoritaria,  los CONTINUA
   # 1.0 significa NO undersampling ,  0.1  es quedarse con el 10% de los CONTINUA
-  param_local$train$undersampling <- 0.1
+  param_local$train$undersampling <- 0.4
 
   return( exp_correr_script( param_local ) ) # linea fija
 }
@@ -207,16 +207,16 @@ TS_strategy_guantesblancos_202107 <- function( pmyexp, pinputexps, pserver="loca
 
 
   param_local$future <- c(202107)
-  param_local$final_train <- c(202105, 202104, 202103)
+  param_local$final_train <- c(202105, 202104, 202103, 202102, 202101)
 
 
-  param_local$train$training <- c(202103, 202102, 202101)
+  param_local$train$training <- c(202103, 202102, 202101, 202012, 202011)
   param_local$train$validation <- c(202104)
   param_local$train$testing <- c(202105)
 
   # Atencion  0.1  de  undersampling de la clase mayoritaria,  los CONTINUA
   # 1.0 significa NO undersampling ,  0.1  es quedarse con el 10% de los CONTINUA
-  param_local$train$undersampling <- 0.1
+  param_local$train$undersampling <- 0.4
 
   return( exp_correr_script( param_local ) ) # linea fija
 }
@@ -318,18 +318,18 @@ corrida_guantesblancos_202109 <- function( pnombrewf, pvirgen=FALSE )
 {
   if( -1 == exp_wf_init( pnombrewf, pvirgen) ) return(0) # linea fija
 
-  DT_incorporar_dataset_default( "DT0007", "competencia_2024.csv.gz")
-  CA_catastrophe_default( "CA0007", "DT0007" )
+  DT_incorporar_dataset_default( "DT0009", "competencia_2024.csv.gz")
+  CA_catastrophe_default( "CA0009", "DT0009" )
 
-  DR_drifting_guantesblancos( "DR0007", "CA0007" )
-  FE_historia_guantesblancos( "FE0007", "DR0007" )
+  DR_drifting_guantesblancos( "DR0009", "CA0009" )
+  FE_historia_guantesblancos( "FE0009", "DR0009" )
 
-  TS_strategy_guantesblancos_202109( "TS0007", "FE0007" )
+  TS_strategy_guantesblancos_202109( "TS0009", "FE0009" )
 
-  HT_tuning_guantesblancos( "HT0007", "TS0007" )
+  HT_tuning_guantesblancos( "HT0009", "TS0009" )
 
   # El ZZ depente de HT y TS
-  ZZ_final_guantesblancos( "ZZ0007", c("HT0007", "TS0007") )
+  ZZ_final_guantesblancos( "ZZ0009", c("HT0009", "TS0009") )
 
 
   exp_wf_end( pnombrewf, pvirgen ) # linea fija
@@ -346,12 +346,12 @@ corrida_guantesblancos_202107 <- function( pnombrewf, pvirgen=FALSE )
   if( -1 == exp_wf_init( pnombrewf, pvirgen) ) return(0) # linea fija
 
   # Ya tengo corrido FE0001 y parto de alli
-  TS_strategy_guantesblancos_202107( "TS0008", "FE0007" )
+  TS_strategy_guantesblancos_202107( "TS00010", "FE0009" )
 
-  HT_tuning_guantesblancos( "HT0008", "TS0008" )
+  HT_tuning_guantesblancos( "HT00010", "TS00010" )
 
   # El ZZ depente de HT y TS
-  ZZ_final_guantesblancos( "ZZ0008", c("HT0008", "TS0008") )
+  ZZ_final_guantesblancos( "ZZ00010", c("HT00010", "TS00010") )
 
 
   exp_wf_end( pnombrewf, pvirgen ) # linea fija
@@ -363,12 +363,12 @@ corrida_guantesblancos_202107 <- function( pnombrewf, pvirgen=FALSE )
 
 # Hago primero esta corrida que me genera los experimentos
 # DT0003, CA0003, DR0001, FE0001, TS0001, HT0001 y ZZ0001
-corrida_guantesblancos_202109( "gb07" )
+corrida_guantesblancos_202109( "gb08" )
 
 
 # Luego partiendo de  FE0001
 # genero TS0002, HT0002 y ZZ0002
 
-corrida_guantesblancos_202107( "gb08" )
+corrida_guantesblancos_202107( "gb09" )
 
  
