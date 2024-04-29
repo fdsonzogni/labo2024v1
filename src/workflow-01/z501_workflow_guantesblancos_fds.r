@@ -110,7 +110,7 @@ DR_drifting_guantesblancos <- function( pmyexp, pinputexps, pserver="local")
   param_local$variables_intrames <- TRUE
   # valores posibles
   #  "ninguno", "rank_simple", "rank_cero_fijo", "deflacion", "estandarizar"
-  param_local$metodo <- "rank_cero_fijo"
+  param_local$metodo <- "rank_simple"
 
   return( exp_correr_script( param_local ) ) # linea fija
 }
@@ -318,18 +318,18 @@ corrida_guantesblancos_202109 <- function( pnombrewf, pvirgen=FALSE )
 {
   if( -1 == exp_wf_init( pnombrewf, pvirgen) ) return(0) # linea fija
 
-  DT_incorporar_dataset_default( "DT00011", "competencia_2024.csv.gz")
-  CA_catastrophe_default( "CA00011", "DT00011" )
+  DT_incorporar_dataset_default( "DT00013", "competencia_2024.csv.gz")
+  CA_catastrophe_default( "CA00013", "DT00013" )
 
-  DR_drifting_guantesblancos( "DR00011", "CA00011" )
-  FE_historia_guantesblancos( "FE00011", "DR00011" )
+  DR_drifting_guantesblancos( "DR00013", "CA00013" )
+  FE_historia_guantesblancos( "FE00013", "DR00013" )
 
-  TS_strategy_guantesblancos_202109( "TS00011", "FE00011" )
+  TS_strategy_guantesblancos_202109( "TS00013", "FE00013" )
 
-  HT_tuning_guantesblancos( "HT00011", "TS00011" )
+  HT_tuning_guantesblancos( "HT00013", "TS00013" )
 
   # El ZZ depente de HT y TS
-  ZZ_final_guantesblancos( "ZZ00011", c("HT00011", "TS00011") )
+  ZZ_final_guantesblancos( "ZZ00013", c("HT00013", "TS00013") )
 
 
   exp_wf_end( pnombrewf, pvirgen ) # linea fija
@@ -346,12 +346,12 @@ corrida_guantesblancos_202107 <- function( pnombrewf, pvirgen=FALSE )
   if( -1 == exp_wf_init( pnombrewf, pvirgen) ) return(0) # linea fija
 
   # Ya tengo corrido FE0001 y parto de alli
-  TS_strategy_guantesblancos_202107( "TS00012", "FE00011" )
+  TS_strategy_guantesblancos_202107( "TS00014", "FE00013" )
 
-  HT_tuning_guantesblancos( "HT00012", "TS00012" )
+  HT_tuning_guantesblancos( "HT00014", "S00014" )
 
   # El ZZ depente de HT y TS
-  ZZ_final_guantesblancos( "ZZ00012", c("HT00012", "TS00012") )
+  ZZ_final_guantesblancos( "ZZ00014", c("HT00014", "TS00014") )
 
 
   exp_wf_end( pnombrewf, pvirgen ) # linea fija
@@ -363,12 +363,12 @@ corrida_guantesblancos_202107 <- function( pnombrewf, pvirgen=FALSE )
 
 # Hago primero esta corrida que me genera los experimentos
 # DT0003, CA0003, DR0001, FE0001, TS0001, HT0001 y ZZ0001
-corrida_guantesblancos_202109( "gb10" )
+corrida_guantesblancos_202109( "gb12" )
 
 
 # Luego partiendo de  FE0001
 # genero TS0002, HT0002 y ZZ0002
 
-corrida_guantesblancos_202107( "gb11" )
+corrida_guantesblancos_202107( "gb13" )
 
  
