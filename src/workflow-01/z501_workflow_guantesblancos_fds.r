@@ -110,7 +110,7 @@ DR_drifting_guantesblancos <- function( pmyexp, pinputexps, pserver="local")
   param_local$variables_intrames <- TRUE
   # valores posibles
   #  "ninguno", "rank_simple", "rank_cero_fijo", "deflacion", "estandarizar"
-  param_local$metodo <- "rank_simple"
+  param_local$metodo <- "ninguno"
 
   return( exp_correr_script( param_local ) ) # linea fija
 }
@@ -270,7 +270,7 @@ HT_tuning_guantesblancos <- function( pmyexp, pinputexps, pserver="local")
     # White Gloves Bayesian Optimization, with a happy narrow exploration
     learning_rate = c( 0.02, 0.8 ),
     feature_fraction = c( 0.5, 0.9 ),
-    num_leaves = c( 300L, 1024L,  "integer" ),
+    num_leaves = c( 8L, 2048L,  "integer" ),
     min_data_in_leaf = c( 100L, 2000L, "integer" )
   )
 
@@ -318,18 +318,18 @@ corrida_guantesblancos_202109 <- function( pnombrewf, pvirgen=FALSE )
 {
   if( -1 == exp_wf_init( pnombrewf, pvirgen) ) return(0) # linea fija
 
-  DT_incorporar_dataset_default( "DT00013", "competencia_2024.csv.gz")
-  CA_catastrophe_default( "CA00013", "DT00013" )
+  DT_incorporar_dataset_default( "DT00015", "competencia_2024.csv.gz")
+  CA_catastrophe_default( "CA00015", "DT00015" )
 
-  DR_drifting_guantesblancos( "DR00013", "CA00013" )
-  FE_historia_guantesblancos( "FE00013", "DR00013" )
+  DR_drifting_guantesblancos( "DR00015", "CA00015" )
+  FE_historia_guantesblancos( "FE00015", "DR00015" )
 
-  TS_strategy_guantesblancos_202109( "TS00013", "FE00013" )
+  TS_strategy_guantesblancos_202109( "TS00015", "FE00015" )
 
-  HT_tuning_guantesblancos( "HT00013", "TS00013" )
+  HT_tuning_guantesblancos( "HT00015", "TS00015" )
 
   # El ZZ depente de HT y TS
-  ZZ_final_guantesblancos( "ZZ00013", c("HT00013", "TS00013") )
+  ZZ_final_guantesblancos( "ZZ00015", c("HT00015", "TS00015") )
 
 
   exp_wf_end( pnombrewf, pvirgen ) # linea fija
@@ -346,12 +346,12 @@ corrida_guantesblancos_202107 <- function( pnombrewf, pvirgen=FALSE )
   if( -1 == exp_wf_init( pnombrewf, pvirgen) ) return(0) # linea fija
 
   # Ya tengo corrido FE0001 y parto de alli
-  TS_strategy_guantesblancos_202107( "TS00014", "FE00013" )
+  TS_strategy_guantesblancos_202107( "TS00016", "FE00015" )
 
-  HT_tuning_guantesblancos( "HT00014", "S00014" )
+  HT_tuning_guantesblancos( "HT00016", "TS00016" )
 
   # El ZZ depente de HT y TS
-  ZZ_final_guantesblancos( "ZZ00014", c("HT00014", "TS00014") )
+  ZZ_final_guantesblancos( "ZZ00016", c("HT00016", "TS00016") )
 
 
   exp_wf_end( pnombrewf, pvirgen ) # linea fija
@@ -363,12 +363,12 @@ corrida_guantesblancos_202107 <- function( pnombrewf, pvirgen=FALSE )
 
 # Hago primero esta corrida que me genera los experimentos
 # DT0003, CA0003, DR0001, FE0001, TS0001, HT0001 y ZZ0001
-corrida_guantesblancos_202109( "gb12" )
+corrida_guantesblancos_202109( "gb14" )
 
 
 # Luego partiendo de  FE0001
 # genero TS0002, HT0002 y ZZ0002
 
-corrida_guantesblancos_202107( "gb13" )
+corrida_guantesblancos_202107( "gb15" )
 
  
