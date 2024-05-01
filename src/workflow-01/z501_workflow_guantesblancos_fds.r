@@ -110,7 +110,7 @@ DR_drifting_guantesblancos <- function( pmyexp, pinputexps, pserver="local")
   param_local$variables_intrames <- TRUE
   # valores posibles
   #  "ninguno", "rank_simple", "rank_cero_fijo", "deflacion", "estandarizar"
-  param_local$metodo <- "ninguno"
+  param_local$metodo <- "rank_cero_fijo"
 
   return( exp_correr_script( param_local ) ) # linea fija
 }
@@ -181,10 +181,10 @@ TS_strategy_guantesblancos_202109 <- function( pmyexp, pinputexps, pserver="loca
 
 
   param_local$future <- c(202109)
-  param_local$final_train <- c(202107, 202106, 202105, 202104, 202103)
+  param_local$final_train <- c(202107, 202106, 202105, 202104, 202103, 202102)
 
 
-  param_local$train$training <- c(202105, 202104, 202103, 202102, 202101)
+  param_local$train$training <- c(202105, 202104, 202103, 202102, 202101, 202012)
   param_local$train$validation <- c(202106)
   param_local$train$testing <- c(202107)
 
@@ -207,10 +207,10 @@ TS_strategy_guantesblancos_202107 <- function( pmyexp, pinputexps, pserver="loca
 
 
   param_local$future <- c(202107)
-  param_local$final_train <- c(202105, 202104, 202103, 202102, 202101)
+  param_local$final_train <- c(202105, 202104, 202103, 202102, 202101, 202012)
 
 
-  param_local$train$training <- c(202103, 202102, 202101, 202012, 202011)
+  param_local$train$training <- c(202103, 202102, 202101, 202012, 202011, 202010)
   param_local$train$validation <- c(202104)
   param_local$train$testing <- c(202105)
 
