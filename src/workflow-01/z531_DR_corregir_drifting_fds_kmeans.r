@@ -48,6 +48,53 @@ AgregarVariables_IntraMes <- function(dataset) {
   gc()
   # INICIO de la seccion donde se deben hacer cambios con variables nuevas
 
+  # Idea del grupo de caso 2 de los alumnos de la modalidad virtual, coorte 2023
+  # aplicar el método kmeans en base a los campos monetarios que son sencibles al drifting
+  # Selecciono los campos monetarios para usarlos en el cluster
+ 
+    campos_monetarios <- colnames(dataset)
+    campos_monetarios <- campos_monetarios[campos_monetarios %like%
+                                            "^(m|Visa_m|Master_m|vm_m)"]
+
+  # Crear un nuevo data.table que solo contenga los atributos identificados
+    dataset_segmentacion <- dataset[, ..campos_monetarios]
+
+  # Identificar y convertir valores infinitos en NA
+    dataset_segmentacion[dataset_segmentacion == Inf | dataset_segmentacion == -Inf] <- NA
+
+  # Convertir los NA en 0
+    dataset_segmentacion[is.na(dataset_segmentacion)] <- 0
+
+  # Normalizar los datos
+    datos_normalizados <- scale(dataset_segmentacion)    
+
+  # Especificar el número de clústeres (k)
+    k <- 7  # Por ejemplo, aquí se ha seleccionado k = 7, pero puedes ajustarlo según tus necesidades
+    cat(
+      "Defino un k =", k,
+      "\n")
+
+  # Ejecutar K-Means
+    kmeans_resultados <- kmeans(datos_normalizados, centers = k)
+    cat(
+      "Aplico K-means sobre datos monetarios normalizados\n")    
+
+  # Agregar la columna de segmentación al dataset original
+    dataset$segmento_kmeans <- kmeans_resultados$cluster
+
+  # Obtener los valores únicos de segmento_kmeans
+    segmentos_unicos <- unique(dataset$segmento_kmeans)
+    cat("Tenemos ", segmentos_unicos, " definidos\n")
+
+  # Crear nuevos atributos binarios para cada segmento
+    for (segmento in segmentos_unicos) {
+    nombre_atributo <- paste0("segmento_", segmento)
+    cat(nombre_atributo <- paste0("segmento_", segmento))
+    dataset[, (nombre_atributo) := as.integer(segmento_kmeans == segmento)]
+    }
+
+    dataset[, segmento_kmeans := NULL]
+
   # creo un ctr_quarter que tenga en cuenta cuando
   # los clientes hace 3 menos meses que estan
   dataset[, ctrx_quarter_normalizado := ctrx_quarter]
@@ -167,46 +214,6 @@ AgregarVariables_IntraMes <- function(dataset) {
     cat("Si no te gusta la decision, modifica a gusto el programa!\n\n")
     dataset[mapply(is.nan, dataset)] <<- 0
   }
-  
-  # Idea del grupo de caso 2 de los alumnos de la modalidad virtual, coorte 2023
-  # aplicar el método kmeans en base a los campos monetarios que son sencibles al drifting
-  # Selecciono los campos monetarios para usarlos en el cluster
- 
-    campos_monetarios <- colnames(dataset)
-    campos_monetarios <- campos_monetarios[campos_monetarios %like%
-                                            "^(m|Visa_m|Master_m|vm_m)"]
-
-  # Crear un nuevo data.table que solo contenga los atributos identificados
-    dataset_segmentacion <- dataset[, ..campos_monetarios]
-
-  # Identificar y convertir valores infinitos en NA
-    dataset_segmentacion[dataset_segmentacion == Inf | dataset_segmentacion == -Inf] <- NA
-
-  # Convertir los NA en 0
-    dataset_segmentacion[is.na(dataset_segmentacion)] <- 0
-
-  # Normalizar los datos
-    datos_normalizados <- scale(dataset_segmentacion)    
-
-  # Especificar el número de clústeres (k)
-    k <- 7  # Por ejemplo, aquí se ha seleccionado k = 7, pero puedes ajustarlo según tus necesidades
-
-  # Ejecutar K-Means
-    kmeans_resultados <- kmeans(datos_normalizados, centers = k)
-
-  # Agregar la columna de segmentación al dataset original
-    dataset$segmento_kmeans <- kmeans_resultados$cluster
-
-  # Obtener los valores únicos de segmento_kmeans
-    segmentos_unicos <- unique(dataset$segmento_kmeans)
-
-  # Crear nuevos atributos binarios para cada segmento
-    for (segmento in segmentos_unicos) {
-    nombre_atributo <- paste0("segmento_", segmento)
-    dataset[, (nombre_atributo) := as.integer(segmento_kmeans == segmento)]
-    }
-
-    dataset[, segmento_kmeans := NULL]
 
 }
 #------------------------------------------------------------------------------
