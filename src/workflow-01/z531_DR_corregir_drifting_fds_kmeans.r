@@ -58,6 +58,7 @@ AgregarVariables_IntraMes <- function(dataset) {
 
   # Crear un nuevo data.table que solo contenga los atributos identificados
     dataset_segmentacion <- dataset[, ..campos_monetarios]
+    cat("Armo un dataset con los atributos monetarios\n")
 
   # Identificar y convertir valores infinitos en NA
     dataset_segmentacion[dataset_segmentacion == Inf | dataset_segmentacion == -Inf] <- NA
