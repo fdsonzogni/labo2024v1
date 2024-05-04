@@ -171,6 +171,36 @@ AgregarVariables_IntraMes <- function(dataset) {
   # Idea del grupo de caso 2 de los alumnos de la modalidad virtual, coorte 2023
   # aplicar el método kmeans en base a los campos monetarios que son sencibles al drifting
   # Selecciono los campos monetarios para usarlos en el cluster
+    infinitos <- lapply(
+    names(dataset),
+    function(.name) dataset[, sum(is.infinite(get(.name)))]
+  )
+
+  infinitos_qty <- sum(unlist(infinitos))
+  if (infinitos_qty > 0) {
+    cat(
+      "ATENCION, hay", infinitos_qty,
+      "valores infinitos en tu dataset. Seran pasados a NA\n"
+    )
+    dataset[mapply(is.infinite, dataset)] <- NA
+  }
+
+  nans <- lapply(
+    names(dataset),
+    function(.name) dataset[, sum(is.nan(get(.name)))]
+  )
+
+  nans_qty <- sum(unlist(nans))
+  if (nans_qty > 0) {
+    cat(
+      "ATENCION, hay", nans_qty,
+      "valores NaN 0/0 en tu dataset. Seran pasados arbitrariamente a 0\n"
+    )
+
+    cat("Si no te gusta la decision, modifica a gusto el programa!\n\n")
+    dataset[mapply(is.nan, dataset)] <- 0
+  }
+
 
     campos_monetarios <- colnames(dataset)
     campos_monetarios <- campos_monetarios[campos_monetarios %like%
