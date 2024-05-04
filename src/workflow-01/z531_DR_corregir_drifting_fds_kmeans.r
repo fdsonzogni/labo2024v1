@@ -80,7 +80,7 @@ AgregarVariables_IntraMes <- function(dataset) {
     cat("Aplico K-means sobre datos monetarios normalizados\n")    
 
   # Agregar la columna de segmentación al dataset original
-    dataset$segmento_kmeans <<- kmeans_resultados$cluster
+    dataset$segmento_kmeans <- kmeans_resultados$cluster
 
   # Obtener los valores únicos de segmento_kmeans
     segmentos_unicos <- unique(dataset$segmento_kmeans)
