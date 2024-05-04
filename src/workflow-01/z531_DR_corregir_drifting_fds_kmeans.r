@@ -52,12 +52,12 @@ AgregarVariables_IntraMes <- function(dataset) {
   # aplicar el método kmeans en base a los campos monetarios que son sencibles al drifting
   # Selecciono los campos monetarios para usarlos en el cluster
  
-    campos_monetarios <- colnames(dataset)
-    campos_monetarios <- campos_monetarios[campos_monetarios %like%
+    campos_monet <- colnames(dataset)
+    campos_monet <- campos_monet[campos_monet %like%
                                             "^(m|Visa_m|Master_m|vm_m)"]
 
   # Crear un nuevo data.table que solo contenga los atributos identificados
-    dataset_segmentacion <- dataset[, ..campos_monetarios]
+    dataset_segmentacion <- dataset[, ..campos_monet]
     cat("Armo un dataset con los atributos monetarios\n")
 
   # Identificar y convertir valores infinitos en NA
@@ -77,8 +77,7 @@ AgregarVariables_IntraMes <- function(dataset) {
 
   # Ejecutar K-Means
     kmeans_resultados <- kmeans(datos_normalizados, centers = k)
-    cat(
-      "Aplico K-means sobre datos monetarios normalizados\n")    
+    cat("Aplico K-means sobre datos monetarios normalizados\n")    
 
   # Agregar la columna de segmentación al dataset original
     dataset$segmento_kmeans <- kmeans_resultados$cluster
@@ -90,7 +89,7 @@ AgregarVariables_IntraMes <- function(dataset) {
   # Crear nuevos atributos binarios para cada segmento
     for (segmento in segmentos_unicos) {
     nombre_atributo <- paste0("segmento_", segmento)
-    cat(nombre_atributo <- paste0("segmento_", segmento))
+    cat(nombre_atributo <- paste0("segmento_", segmento), "\n")
     dataset[, (nombre_atributo) := as.integer(segmento_kmeans == segmento)]
     }
 
