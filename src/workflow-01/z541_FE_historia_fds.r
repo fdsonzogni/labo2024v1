@@ -234,8 +234,8 @@ AgregaVarRandomForest <- function(
     # Verificar qué columnas tienen todos los valores faltantes
       all_missing_columns <- missing_columns[colSums(is.na(dataset_rf[, missing_columns])) == nrow(dataset_rf)]
 
-    # Eliminar las columnas con todos los valores faltantes
-      dataset_rf <- dataset_rf[, !all_missing_columns]
+    # Imputar NA en las columnas con todos los valores faltantes
+      dataset_rf[, (all_missing_columns) := lapply(.SD, function(x) if(all(is.na(x))) NA else x), .SDcols = all_missing_columns]
 
   # imputo los nulos, ya que ranger no acepta nulos
   # Leo Breiman, ¿por que le temias a los nulos?
