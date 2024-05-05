@@ -154,7 +154,7 @@ AgregarVariables_IntraMes <- function(dataset) {
     datos_normalizados <- scale(dataset_segmentacion)    
 
   # Especificar el número de clústeres (k)
-    k <- 7  # Por ejemplo, aquí se ha seleccionado k = 7, pero puedes ajustarlo según tus necesidades
+    k <- 25  # Por ejemplo, aquí se ha seleccionado k = 7, pero puedes ajustarlo según tus necesidades
     cat(
       "Defino un k =", k,
       "\n")

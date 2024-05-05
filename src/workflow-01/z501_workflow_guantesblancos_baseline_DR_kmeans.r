@@ -22,8 +22,8 @@ envg$EXPENV$datasets_dir <- "~/buckets/b1/datasets/"
 envg$EXPENV$arch_sem <- "mis_semillas.txt"
 
 # default
-envg$EXPENV$gcloud$RAM <- 128
-envg$EXPENV$gcloud$cCPU <- 8
+envg$EXPENV$gcloud$RAM <- 256
+envg$EXPENV$gcloud$cCPU <- 10
 
 #------------------------------------------------------------------------------
 # Error catching
