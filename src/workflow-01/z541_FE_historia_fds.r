@@ -231,6 +231,13 @@ AgregaVarRandomForest <- function(
     }
     }
 
+  # Obtener las columnas que contienen valores NA
+    missing_columns <- colnames(dataset_rf)[colSums(is.na(dataset_rf)) > 0]
+
+  # Eliminar las columnas que contienen valores NA
+    dataset_rf[, !colnames(dataset_rf) %in% missing_columns, with = FALSE]
+
+
   # imputo los nulos, ya que ranger no acepta nulos
   # Leo Breiman, ¿por que le temias a los nulos?
   set.seed(semilla, kind = "L'Ecuyer-CMRG")
