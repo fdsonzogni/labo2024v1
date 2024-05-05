@@ -231,17 +231,6 @@ AgregaVarRandomForest <- function(
     }
     }
 
-  # Obtener las columnas con valores faltantes
-    missing_columns <- colnames(dataset_rf)[colSums(is.na(dataset_rf)) > 0]
-
-  # Verificar qué columnas tienen todos los valores faltantes
-    all_missing_columns <- missing_columns[colSums(is.na(dataset_rf[, missing_columns])) == nrow(dataset_rf)]
-
-  # Imputar NA en las columnas con todos los valores faltantes
-    for(col in all_missing_columns) {
-      dataset_rf[is.na(get(col)), (col) := NA]
-    }
-
   # imputo los nulos, ya que ranger no acepta nulos
   # Leo Breiman, ¿por que le temias a los nulos?
   set.seed(semilla, kind = "L'Ecuyer-CMRG")
