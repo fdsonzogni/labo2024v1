@@ -217,7 +217,12 @@ AgregaVarRandomForest <- function(
       (clase01 == 1 | azar < 0.10))]
 
   # Controla que todas las variables sean numéricas
+  # Convertir las columnas no numéricas ni de factor a tipo numérico o de factor
+    columnas_numericas <- sapply(dataset_rf, is.numeric)
+    columnas_factor <- sapply(dataset_rf, is.factor)
+  
   # Iterar sobre las columnas y convertir las que no son numéricas ni de factor
+    
   for (i in 1:ncol(dataset_rf)) {
     if (!columnas_numericas[i] && !columnas_factor[i]) {
       dataset_rf[[i]] <- as.numeric(dataset_rf[[i]])
