@@ -125,7 +125,7 @@ FE_historia_guantesblancos <- function( pmyexp, pinputexps, pserver="local")
   if( -1 == (param_local <- exp_init( pmyexp, pinputexps, pserver ))$resultado ) return( 0 )# linea fija
 
 
-  param_local$meta$script <- "/src/workflow-01/z541_FE_historia.r"
+  param_local$meta$script <- "/src/workflow-01/z541_FE_historia_fds.r"
 
   param_local$lag1 <- TRUE
   param_local$lag2 <- FALSE # no me engraso con los lags de orden 2
