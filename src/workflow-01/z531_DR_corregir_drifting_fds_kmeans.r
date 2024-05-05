@@ -175,15 +175,10 @@ AgregarVariables_IntraMes <- function(dataset) {
     nombre_atributo <- paste0("segmento_", segmento)
     cat(nombre_atributo <- paste0("segmento_", segmento), "\n")
     dataset[, (nombre_atributo) := as.integer(segmento_kmeans == segmento)]
+    assign("dataset", dataset, envir = .GlobalEnv)
     }
 
     dataset[, segmento_kmeans := NULL]
-
-  fwrite(dataset,
-  file = "dataset.csv",
-  logical01 = TRUE,
-  sep = ",")
-
 
   # valvula de seguridad para evitar valores infinitos
   # paso los infinitos a NULOS
