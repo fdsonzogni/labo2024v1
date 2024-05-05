@@ -179,6 +179,11 @@ AgregarVariables_IntraMes <- function(dataset) {
 
     dataset[, segmento_kmeans := NULL]
 
+  fwrite(dataset,
+  file = "dataset.csv",
+  logical01 = TRUE,
+  sep = ",")
+
 
   # valvula de seguridad para evitar valores infinitos
   # paso los infinitos a NULOS
