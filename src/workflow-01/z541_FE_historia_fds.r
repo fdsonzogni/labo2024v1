@@ -231,6 +231,9 @@ AgregaVarRandomForest <- function(
     }
     }
 
+    # Obtener las columnas con valores faltantes
+      missing_columns <- colnames(dataset_rf)[colSums(is.na(dataset_rf)) > 0]
+    
     # Verificar qué columnas tienen todos los valores faltantes
       all_missing_columns <- missing_columns[colSums(is.na(dataset_rf[, missing_columns])) == nrow(dataset_rf)]
 
