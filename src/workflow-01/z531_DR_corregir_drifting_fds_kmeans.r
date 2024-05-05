@@ -215,7 +215,9 @@ AgregarVariables_IntraMes <- function(dataset) {
     )
 
     cat("Si no te gusta la decision, modifica a gusto el programa!\n\n")
-    dataset[mapply(is.nan, dataset)] <<- 0
+    for (col in names(dataset)) {
+      dataset[is.nan(dataset[[col]]), (col) := 0]
+    }
   }
 
 }
