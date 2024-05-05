@@ -208,6 +208,12 @@ AgregaVarRandomForest <- function(
 
   campos_buenos <- setdiff(colnames(dataset), c("clase_ternaria"))
 
+  # Obtener las columnas que contienen valores nulos en dataset
+    columnas_con_nulos <- colnames(dataset)[colSums(is.na(dataset)) > 0]
+
+  # Eliminar las columnas con nulos de campos_buenos
+    campos_buenos <- setdiff(campos_buenos, columnas_con_nulos)
+
   dataset_rf <- copy(dataset[, campos_buenos, with = FALSE])
   set.seed(semilla, kind = "L'Ecuyer-CMRG")
   azar <- runif(nrow(dataset_rf))
@@ -230,13 +236,6 @@ AgregaVarRandomForest <- function(
       # dataset_rf[[i]] <- as.factor(dataset_rf[[i]])
     }
     }
-
-  # Obtener las columnas que contienen valores NA
-    missing_columns <- colnames(dataset_rf)[colSums(is.na(dataset_rf)) > 0]
-
-  # Eliminar las columnas que contienen valores NA
-    dataset_rf[, !colnames(dataset_rf) %in% missing_columns, with = FALSE]
-
 
   # imputo los nulos, ya que ranger no acepta nulos
   # Leo Breiman, ¿por que le temias a los nulos?
