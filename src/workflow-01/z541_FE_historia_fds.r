@@ -468,10 +468,17 @@ campitos <- c( PARAM$dataset_metadata$primarykey,
 
 campitos <- unique( campitos )
 
-cols_lagueables <- copy(setdiff(
-  colnames(dataset),
-  PARAM$dataset_metadata
-))
+# Obtener los nombres de las columnas que no comienzan con "segmento"
+cols_no_segmento <- colnames(dataset)[!grepl("^segmento", colnames(dataset))]
+
+# Crear cols_lagueables excluyendo las columnas que comienzan con "segmento"
+# Agregado por grupo del caso 2 para evitar hacer lag y tendencia de las variables creados por k-means en DR
+cols_lagueables <- copy(setdiff(cols_no_segmento, PARAM$dataset_metadata))
+
+#cols_lagueables <- copy(setdiff(
+#  colnames(dataset),
+#  PARAM$dataset_metadata
+#))
 
 # ordeno el dataset por <numero_de_cliente, foto_mes> para poder hacer lags
 #  es MUY  importante esta linea
