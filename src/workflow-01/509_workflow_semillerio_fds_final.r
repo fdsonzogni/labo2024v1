@@ -21,8 +21,8 @@ envg$EXPENV$datasets_dir <- "~/buckets/b1/datasets/"
 envg$EXPENV$arch_sem <- "mis_semillas.txt"
 
 # default
-envg$EXPENV$gcloud$RAM <- 64
-envg$EXPENV$gcloud$cCPU <- 8
+envg$EXPENV$gcloud$RAM <- 512
+envg$EXPENV$gcloud$cCPU <- 24
 
 #------------------------------------------------------------------------------
 # Error catching
@@ -85,7 +85,7 @@ CA_catastrophe_baseline <- function( pmyexp, pinputexps, pserver="local")
 }
 #------------------------------------------------------------------------------
 # Data Drifting baseline
-# Aplica mejor ganancia de Caso 2
+# Aplica mejor ganancia de Caso 2 con el nuevo método "deflación_usd"
 DR_drifting_baseline <- function( pmyexp, pinputexps, pserver="local")
 {
   if( -1 == (param_local <- exp_init( pmyexp, pinputexps, pserver ))$resultado ) return( 0 )# linea fija
@@ -112,8 +112,8 @@ FE_historia_baseline <- function( pmyexp, pinputexps, pserver="local")
   param_local$meta$script <- "/src/workflow-01/z541_FE_historia.r"
 
   param_local$lag1 <- TRUE
-  param_local$lag2 <- FALSE # no me engraso con los lags de orden 2
-  param_local$lag3 <- FALSE # no me engraso con los lags de orden 3
+  param_local$lag2 <- TRUE # no me engraso con los lags de orden 2
+  param_local$lag3 <- TRUE # no me engraso con los lags de orden 3
 
   # baseline
   param_local$Tendencias1$run <- TRUE  # FALSE, no corre nada de lo que sigue
@@ -126,7 +126,7 @@ FE_historia_baseline <- function( pmyexp, pinputexps, pserver="local")
   param_local$Tendencias1$ratiomax <- FALSE
 
   # baseline
-  param_local$Tendencias2$run <- FALSE
+  param_local$Tendencias2$run <- TRUE
   param_local$Tendencias2$ventana <- 6
   param_local$Tendencias2$tendencia <- TRUE
   param_local$Tendencias2$minimo <- FALSE
@@ -144,9 +144,10 @@ FE_historia_baseline <- function( pmyexp, pinputexps, pserver="local")
   param_local$RandomForest$mtry <- 40
 
   # varia de 0.0 a 2.0, si es 0.0 NO se activan
-  param_local$CanaritosAsesinos$ratio <- 0.0
+  # Cambio sugerido por grupo experimental de FE
+  param_local$CanaritosAsesinos$ratio <- 2
   # desvios estandar de la media, para el cutoff
-  param_local$CanaritosAsesinos$desvios <- 4.0
+  param_local$CanaritosAsesinos$desvios <- 0.75
 
   return( exp_correr_script( param_local ) ) # linea fija
 }
@@ -161,15 +162,17 @@ TS_strategy_baseline_202109 <- function( pmyexp, pinputexps, pserver="local")
 
 
   param_local$future <- c(202109)
-  param_local$final_train <- c(202107, 202106, 202105, 202104, 202103, 202102, 202101, 202012, 202011)
+  param_local$final_train <- c(201905,201906,201907,201908,201909,201910,201911,201912,202001,202002,202003,202011,202012,202101,
+                                  202102, 202103,202104,202105,202106,202107)
 
 
-  param_local$train$training <- c(202105, 202104, 202103, 202102, 202101, 202012, 202011, 202010, 202009)
+  param_local$train$training <- c(202103,202104,201905,201906,201907,201908,201909,201910,201911,201912,202001,202002,202003,202011,202012,202101,
+                                  202102, 202103,202104,202105)
   param_local$train$validation <- c(202106)
   param_local$train$testing <- c(202107)
 
   # undersampling  baseline
-  param_local$train$undersampling <- 0.2
+  param_local$train$undersampling <- 0.3
 
   return( exp_correr_script( param_local ) ) # linea fija
 }
@@ -241,7 +244,7 @@ HT_tuning_baseline <- function( pmyexp, pinputexps, pserver="local")
 
     extra_trees = FALSE,
     # Quasi  baseline, el minimo learning_rate es 0.02 !!
-    learning_rate = c( 0.01, 0.5 ),
+    learning_rate = c( 0.02, 0.5 ),
     feature_fraction = c( 0.5, 0.9 ),
     num_leaves = c( 8L, 2048L,  "integer" ),
     min_data_in_leaf = c( 100L, 2000L, "integer" )
@@ -249,7 +252,7 @@ HT_tuning_baseline <- function( pmyexp, pinputexps, pserver="local")
 
 
   # una Beyesian de Guantes Blancos, solo hace 15 iteraciones
-  param_local$bo_iteraciones <- 50 # iteraciones de la Optimizacion Bayesiana
+  param_local$bo_iteraciones <- 100 # iteraciones de la Optimizacion Bayesiana
 
   return( exp_correr_script( param_local ) ) # linea fija
 }
@@ -292,7 +295,7 @@ ZZ_final_semillerio_baseline <- function( pmyexp, pinputexps, pserver="local")
   param_local$modelos_rank <- c(1)
 
   param_local$kaggle$envios_desde <- 10000L
-  param_local$kaggle$envios_hasta <- 11500L
+  param_local$kaggle$envios_hasta <- 14500L
   param_local$kaggle$envios_salto <-   500L
 
   # para el caso que deba graficar
@@ -319,18 +322,18 @@ corrida_baseline_semillerio_202109 <- function( pnombrewf, pvirgen=FALSE )
 {
   if( -1 == exp_wf_init( pnombrewf, pvirgen) ) return(0) # linea fija
 
-  DT_incorporar_dataset_baseline( "DT0001-sem-", "competencia_2024.csv.gz")
-  CA_catastrophe_baseline( "CA0001-sem-", "DT0001-sem-" )
+  DT_incorporar_dataset_baseline( "DT0001-sem-final", "competencia_2024.csv.gz")
+  CA_catastrophe_baseline( "CA0001-sem-final", "DT0001-sem-final" )
 
-  DR_drifting_baseline( "DR0001-sem-", "CA0001-sem-" )
-  FE_historia_baseline( "FE0001-sem-", "DR0001-sem-" )
+  DR_drifting_baseline( "DR0001-sem-final", "CA0001-sem-final" )
+  FE_historia_baseline( "FE0001-sem-final", "DR0001-sem-final" )
 
-  TS_strategy_baseline_202109( "TS0001-sem-", "FE0001-sem-" )
+  TS_strategy_baseline_202109( "TS0001-sem-final", "FE0001-sem-final" )
 
-  HT_tuning_baseline( "HT0001-sem-", "TS0001-sem-" )
+  HT_tuning_baseline( "HT0001-sem-final", "TS0001-sem-final" )
 
   # El ZZ depente de HT y TS
-  ZZ_final_semillerio_baseline( "ZZ0001-sem-", c("HT0001-sem","TS0001-sem-") )
+  ZZ_final_semillerio_baseline( "ZZ0001-sem-final", c("HT0001-sem","TS0001-sem-final") )
 
 
   exp_wf_end( pnombrewf, pvirgen ) # linea fija
