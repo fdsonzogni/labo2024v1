@@ -305,7 +305,7 @@ ZZ_final_semillerio_baseline <- function( pmyexp, pinputexps, pserver="local")
 
   # El parametro fundamental de semillerio
   # Es la cantidad de LightGBM's que ensamblo
-  param_local$semillerio <- 20
+  param_local$semillerio <- 50
 
   return( exp_correr_script( param_local ) ) # linea fija
 }
